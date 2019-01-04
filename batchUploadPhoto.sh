@@ -23,7 +23,7 @@ do
 	# jq '.imagesList=["Put the image here"]' $entityFileName > "$tmp" && mv "$tmp" $entityFileName
 
 	# Manipluate the fine print En for testing
-	jq '.finePrintEn="Data Imported by Just Move"' $entityFileName > "$tmp" && mv "$tmp" $entityFileName
+	# jq '.finePrintEn="Data Imported by Just Move"' $entityFileName > "$tmp" && mv "$tmp" $entityFileName
 	jq '.id=null' $entityFileName > "$tmp" && mv "$tmp" $entityFileName
 	jq '.deliveryMethod="merchant-delivery"' $entityFileName > "$tmp" && mv "$tmp" $entityFileName
 
@@ -33,11 +33,11 @@ do
 	# Save the entity
 	curl 'https://mms.hktv.com.hk/mms/productController/saveEntity' -H 'Origin: https://mms.hktv.com.hk' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: zh-HK,zh;q=0.9,en-US;q=0.8,en;q=0.7' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36' -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept: application/json, text/plain, */*' -H 'Referer: https://mms.hktv.com.hk/mms/' -H 'Cookie: JSESSIONID='$token -H 'Connection: keep-alive' --data-binary "@"$entityFileName --compressed > currentResult.json
 
-	cat currentResult.json
-
 	importedSKU=$(jq '.skuCode' $entityFileName)
 
-	echo $p":"$importedSKU >> result.log
+	echo "the response of $p : $importedSKU" >> result.log
+
+	cat currentResult.json >> result.log
 
 	echo "Finished imported: "$importedSKU
 done < input_tmp_ids
